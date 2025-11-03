@@ -13,7 +13,6 @@ def call_function(function_call_part, verbose = False):
         print(f" - Calling function: {function_call_part.name}")
 
     results = ""
-    print(f"the function is {function_call_part.name}")
     if function_call_part.name == "get_files_info":
         results = get_files_info(working_directory,**function_call_part.args)
     if function_call_part.name == "get_files_content":

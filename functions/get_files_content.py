@@ -29,7 +29,7 @@ schema_get_files_content = types.FunctionDeclaration(
         properties={
             "file_path": types.Schema(
                 type=types.Type.STRING,
-                description="The path to the file, from the working directory. Not optional"
+                description="The path needed to access the target file, from the working directory calculator."
             ),
         },
     ),

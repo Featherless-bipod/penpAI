@@ -56,33 +56,55 @@ All paths you provide should be relative to the working directory. You do not ne
     system_instruction=system_prompt
     )
 
+    max_iters = 20
 
     messages = [
     types.Content(role="user", parts=[types.Part(text=prompt)]),
     ]
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=messages,
-        config=config
-    )
+    for i in range(0,max_iters):
 
-    if response is None or response.usage_metadata is None:
-         print("response is malformed")
-         return
-    
-    if verbose:
-        print(f"User prompt:{prompt}")
-        print(f"Prompt tokens:{response.usage_metadata.prompt_token_count}")
-        print(f"Response tokens:{response.usage_metadata.candidates_token_count}")
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=messages,
+            config=config
+        )
 
-    if response.function_calls:
-        for function_call_part in response.function_calls:
-            result = print(call_function(function_call_part, verbose))
-            print(result)
-    else:
-        print(response.text)
-        print(response.usage_metadata.candidates_token_count)
+        if response is None or response.usage_metadata is None:
+            print("response is malformed")
+            return
+        
+        if verbose:
+            print(f"User prompt:{prompt}")
+            print(f"Prompt tokens:{response.usage_metadata.prompt_token_count}")
+            print(f"Response tokens:{response.usage_metadata.candidates_token_count}")
+
+
+        if response.candidates:
+            for candidate in response.candidates: 
+                if candidate is None or candidate.contet is None:
+                    continue
+                messages.append(candidate.content)
+        
+        if response.function_calls:
+            for function_call_part in response.function_calls:
+                 result = call_function(function_call_part, verbose)
+                 messages.append(result)
+        else:
+            print(response.text)
+            return
+
+
+
+        #for before looping
+        """if response.function_calls:
+            for function_call_part in response.function_calls:
+                result = print(call_function(function_call_part, verbose))
+                print(result)
+        else:
+            #final agent text message
+            print(response.text)
+            return"""
 
 
 main()
