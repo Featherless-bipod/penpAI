@@ -1,0 +1,1 @@
+hello.model.load_state_dict('path/to/model')
