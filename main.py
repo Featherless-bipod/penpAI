@@ -82,7 +82,7 @@ All paths you provide should be relative to the working directory. You do not ne
 
         if response.candidates:
             for candidate in response.candidates: 
-                if candidate is None or candidate.contet is None:
+                if candidate is None or candidate.content is None:
                     continue
                 messages.append(candidate.content)
         
